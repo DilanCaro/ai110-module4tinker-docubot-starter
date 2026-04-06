@@ -80,3 +80,11 @@ You will primarily work in:
 - Python 3.9+
 - A Gemini API key for LLM features (only needed for modes 1 and 3)
 - No database, no server setup, no external services besides LLM calls
+
+## TF Guide
+
+The main thing students needed to understand is that LLMs are not reliable just because they sound confident. Like they can say something that sounds really good but is actually not based on anything in the docs. Retrieval is what helps ground the answers in actual evidence. A big part of this was also understanding the difference between naive generation, retrieval only, and RAG, and how combining retrieval + generation makes things better. 
+
+I think students will struggle the most with the retrieval part, especially how to score relevance, how much text to return, and when the system should just say “I don’t know” instead of guessing. AI was helpful when using it to think through the design or understand parts of the code, but it was also misleading sometimes because it gives answers that look correct even if you don’t fully understand them. 
+
+One important thing I learned is to treat AI output more like a guess or starting point, not something to blindly trust. If I had to guide a student without giving the answer, I would tell them to follow exactly what happens to a query step by step (index → scoring → retrieval) and then compare that with the output they’re getting.

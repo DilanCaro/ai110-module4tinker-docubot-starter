@@ -65,6 +65,18 @@ class DocuBot:
         """
         index = {}
         # TODO: implement simple indexing
+        for filename, text in documents:
+            words = text.lower().split()
+            cleaned_words = set()
+            for word in words:
+                cleaned = word.strip(".,!?;:()[]{}\"'`")
+                if cleaned:
+                    cleaned_words.add(cleaned)
+
+            for word in cleaned_words:
+                if word not in index:
+                    index[word] = []
+                index[word].append(filename)
         return index
 
     # -----------------------------------------------------------
@@ -82,7 +94,19 @@ class DocuBot:
         - Return the count as the score
         """
         # TODO: implement scoring
-        return 0
+        query_words = query.lower().split()
+        text_words = set()
+        for word in text.lower().split():
+            cleaned = word.strip(".,!?;:()[]{}\"'`")
+            if cleaned:
+                text_words.add(cleaned)
+
+        score = 0
+        for word in query_words:
+            cleaned = word.strip(".,!?;:()[]{}\"'`")
+            if cleaned in text_words:
+                score += 1
+        return score
 
     def retrieve(self, query, top_k=3):
         """
@@ -93,6 +117,26 @@ class DocuBot:
         """
         results = []
         # TODO: implement retrieval logic
+        query_words = query.lower().split()
+        candidate_filenames = set()
+
+        for word in query_words:
+            cleaned = word.strip(".,!?;:()[]{}\"'`")
+            if cleaned in self.index:
+                candidate_filenames.update(self.index[cleaned])
+
+        scored_results = []
+        for filename, text in self.documents:
+            if filename in candidate_filenames:
+                score = self.score_document(query, text)
+                if score > 0:
+                    scored_results.append((score, filename, text))
+
+        scored_results.sort(key=lambda x: x[0], reverse=True)
+
+        for _, filename, text in scored_results:
+            results.append((filename, text))
+
         return results[:top_k]
 
     # -----------------------------------------------------------
